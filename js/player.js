@@ -55,6 +55,10 @@ Player.prototype.update = function(delta){
 				this.y -= moveDistance;
 			}
 		}
+
+		if(!this.isMoving() && controller.up){
+			this.up();
+		}
 	}
 }
 
