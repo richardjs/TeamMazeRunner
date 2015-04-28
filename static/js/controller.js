@@ -17,6 +17,7 @@ function Controller(){
 				break;
 			case 40:
 				this.down = true;
+				player.down();
 				break;
 			default:
 				var notUsed = true;

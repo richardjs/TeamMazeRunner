@@ -56,8 +56,12 @@ Player.prototype.update = function(delta){
 			}
 		}
 
-		if(!this.isMoving() && controller.up){
-			this.up();
+		if(!this.isMoving()){
+			if(controller.up){
+				this.up();
+			}else if(controller.down){
+				this.down();
+			}
 		}
 	}
 }
@@ -94,6 +98,26 @@ Player.prototype.up = function(){
 			break;
 		case Math.PI*1.5:
 			this.tryMoveTo(this.x+1, this.y);
+			break;
+	}
+}
+
+Player.prototype.down = function(){
+	if(this.isMoving()){
+		return false;
+	}
+	switch(this.angle){
+		case Math.PI*0:
+			this.tryMoveTo(this.x, this.y-1);
+			break;
+		case Math.PI*.5:
+			this.tryMoveTo(this.x+1, this.y);
+			break;
+		case Math.PI*1:
+			this.tryMoveTo(this.x, this.y+1);
+			break;
+		case Math.PI*1.5:
+			this.tryMoveTo(this.x-1, this.y);
 			break;
 	}
 }
