@@ -23,10 +23,22 @@ io.on('connection', function(socket){
 	socket.on('disconnect', function(){
 		console.log('disconnect from ' + socket.handshake.address);
 		clients.splice(clients.indexOf(socket), 1);
+		console.log(clients.length)
 	});
 
 	socket.emit('maze data', maze);
-	socket.emit('role', 'helper');
+	console.log(clients.length)
+	if(clients.length === 1){
+		socket.emit('role', 'runner');
+
+		socket.on('player update', function(player){
+			for(var i = 0; i < clients.length; i++){
+				clients[i].emit('runner update', player);
+			}
+		});
+	}else{
+		socket.emit('role', 'helper');
+	}
 });
 
 var lastTime = 0;

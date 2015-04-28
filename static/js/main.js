@@ -47,7 +47,6 @@ socket.on('maze data', function(maze){
 					new THREE.BoxGeometry(1, 1, 1),
 					new THREE.MeshPhongMaterial({
 						color: 0xff0000,
-						side: THREE.DoubleSide
 					})
 				);
 
@@ -69,7 +68,6 @@ socket.on('role', function(role){
 
 		player = new Player(maze.start.x, maze.start.y);
 
-
 		camera.rotation.x = Math.PI/2;
 
 		// Instantiate controller
@@ -81,9 +79,10 @@ socket.on('role', function(role){
 			lastTime = time;
 
 			player.update(delta);
+			socket.emit('player update', player);
 
-			camera.position.x = player.x - MAZE_WIDTH/2 + .5;
-			camera.position.y = player.y - MAZE_HEIGHT/2 + .5;
+			camera.position.x = player.x - maze.width/2 + .5;
+			camera.position.y = player.y - maze.height/2 + .5;
 			camera.rotation.y = player.angle;
 			renderer.render(scene, camera);
 
@@ -92,6 +91,20 @@ socket.on('role', function(role){
 	}else if(role === 'helper'){
 		camera.position.z = HELPER_HEIGHT;
 		camera.lookAt(scene.floor.position);
+
+		scene.runner = new THREE.Mesh(
+			new THREE.CylinderGeometry(0, .33, 1, 4, 4),
+			new THREE.MeshPhongMaterial({
+				color: 0x00ff00
+			})
+		);
+		scene.add(scene.runner);
+
+		socket.on('runner update', function(runner){
+			scene.runner.position.x = runner.x - maze.width/2 + .5;
+			scene.runner.position.y = runner.y - maze.height/2 + .5;
+			scene.runner.rotation.z = runner.angle;
+		});
 
 		render = function(time){
 			var delta = time - lastTime;
