@@ -65,9 +65,7 @@ socket.on('maze data', function(maze){
 	camera.position.y = -5;
 	//camera.lookAt(floor.position);
 
-	var start = findOpenSpace(maze);
-
-	player = new Player(start.x, start.y);
+	player = new Player(maze.start.x, maze.start.y);
 
 	camera.position.z = .5;
 

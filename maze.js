@@ -27,6 +27,8 @@ function Maze(){
 		this.map[x][y] = true;
 
 	}.bind(this));
+
+	this.start = this.findOpenSpace();
 }
 
 Maze.prototype.findOpenSpace = function(){
@@ -35,7 +37,7 @@ Maze.prototype.findOpenSpace = function(){
 	do{
 		x = Math.floor(Math.random() * MAZE_WIDTH);
 		y = Math.floor(Math.random() * MAZE_HEIGHT);
-	}while(maze.map[x][y]);
+	}while(this.map[x][y]);
 	return {x: x, y: y};
 }
 
