@@ -3,9 +3,11 @@
 // Global components
 window.scene = null;
 window.camera = null;
+window.renderer = null;
 window.maze = null;
 window.player = null;
 window.controller = null;
+window.render = null;
 window.socket = null;
 
 socket = io();
@@ -17,7 +19,7 @@ socket.on('maze data', function(maze){
 	scene = new THREE.Scene();
 	camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, .1, 1000);
 	//var camera = new THREE.OrthographicCamera(window.innerWidth/-20, window.innerWidth/20, window.innerHeight/20, window.innerHeight/-20, 0, 1000);
-	var renderer = new THREE.WebGLRenderer();
+	renderer = new THREE.WebGLRenderer();
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	document.body.appendChild(renderer.domElement);
 
@@ -29,14 +31,13 @@ socket.on('maze data', function(maze){
 	scene.add(pointLight);
 
 	// Create floor
-	var floor = new THREE.Mesh(
+	scene.floor = new THREE.Mesh(
 		new THREE.PlaneGeometry(maze.width, maze.height),
 		new THREE.MeshPhongMaterial({
 			color: 0xfffffff,
 		})
 	);
-	scene.add(floor);
-
+	scene.add(scene.floor);
 	
 	// Add walls
 	for(var x = 0; x < maze.width; x++){
@@ -58,36 +59,49 @@ socket.on('maze data', function(maze){
 			}
 		}
 	}
+});
+
+socket.on('role', function(role){
+	if(role === 'runner'){
+		// Position camera
+		camera.position.y = -5;
+		camera.position.z = .5;
+
+		player = new Player(maze.start.x, maze.start.y);
 
 
-	// Position camera
-	camera.position.z = 45;
-	camera.position.y = -5;
-	//camera.lookAt(floor.position);
+		camera.rotation.x = Math.PI/2;
 
-	player = new Player(maze.start.x, maze.start.y);
+		// Instantiate controller
+		controller = new Controller();
 
-	camera.position.z = .5;
+		// Main loop
+		render = function(time){
+			var delta = time - lastTime;
+			lastTime = time;
 
-	camera.rotation.x = Math.PI/2;
+			player.update(delta);
 
-	// Instantiate controller
-	controller = new Controller();
+			camera.position.x = player.x - MAZE_WIDTH/2 + .5;
+			camera.position.y = player.y - MAZE_HEIGHT/2 + .5;
+			camera.rotation.y = player.angle;
+			renderer.render(scene, camera);
 
-	// Main loop
-	var lastTime = 0;
-	function render(time){
-		var delta = time - lastTime;
-		lastTime = time;
+			requestAnimationFrame(render);
+		}
+	}else if(role === 'helper'){
+		camera.position.z = HELPER_HEIGHT;
+		camera.lookAt(scene.floor.position);
 
-		player.update(delta);
+		render = function(time){
+			var delta = time - lastTime;
+			lastTime = time;
 
-		camera.position.x = player.x - MAZE_WIDTH/2 + .5;
-		camera.position.y = player.y - MAZE_HEIGHT/2 + .5;
-		camera.rotation.y = player.angle;
-		renderer.render(scene, camera);
+			renderer.render(scene, camera);
 
-		requestAnimationFrame(render);
+			requestAnimationFrame(render);
+		}
 	}
+	var lastTime = 0;
 	render(0);
 });

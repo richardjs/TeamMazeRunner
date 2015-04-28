@@ -26,6 +26,7 @@ io.on('connection', function(socket){
 	});
 
 	socket.emit('maze data', maze);
+	socket.emit('role', 'helper');
 });
 
 var lastTime = 0;
