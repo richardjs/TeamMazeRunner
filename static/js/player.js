@@ -26,7 +26,6 @@ Player.prototype.update = function(delta){
 				this.angle += Math.PI*2;
 			}
 			if(this.angle >= Math.PI*2){
-				console.log('reducing');
 				this.angle %= Math.PI*2;
 			}
 			this.targetAngle = this.angle;
@@ -71,7 +70,6 @@ Player.prototype.left = function(){
 		return;
 	}
 	this.targetAngle += Math.PI/2;
-	console.log('target angle: ' + this.targetAngle);
 }
 
 Player.prototype.right = function(){
@@ -79,7 +77,6 @@ Player.prototype.right = function(){
 		return;
 	}
 	this.targetAngle -= Math.PI/2;
-	console.log('target angle: ' + this.targetAngle);
 }
 
 Player.prototype.up = function(){
@@ -123,9 +120,7 @@ Player.prototype.down = function(){
 }
 
 Player.prototype.tryMoveTo = function(x, y){
-	console.log(x, y);
 	if(maze.map[x][y]){
-		console.log('wall');
 		return;
 	}
 	this.targetX = x;

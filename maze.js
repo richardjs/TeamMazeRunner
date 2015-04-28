@@ -1,6 +1,16 @@
 'use strict';
 
+(function(exports){
+
+var ROT = require('rot-js');
+
+var MAZE_WIDTH = 30;
+var MAZE_HEIGHT = 15;
+
 function Maze(){
+	this.width = MAZE_WIDTH;
+	this.height = MAZE_HEIGHT;
+
 	this.map = [];
 	new ROT.Map.EllerMaze(MAZE_WIDTH, MAZE_HEIGHT).create(function(x, y, wall){
 		if(!wall){
@@ -10,24 +20,12 @@ function Maze(){
 			return;
 		}
 
-		var box = new THREE.Mesh(
-			new THREE.BoxGeometry(1, 1, 1),
-			new THREE.MeshPhongMaterial({
-				color: 0xff0000,
-				side: THREE.DoubleSide
-			})
-		);
-
-		box.position.x = x - MAZE_WIDTH/2 + .5;
-		box.position.y = y - MAZE_HEIGHT/2 + .5;
-		box.position.z = .5;
-
 		if(!this.map[x]){
 			this.map[x] = [];
 		}
-		this.map[x][y] = box;
 
-		scene.add(box);
+		this.map[x][y] = true;
+
 	}.bind(this));
 }
 
@@ -40,3 +38,7 @@ Maze.prototype.findOpenSpace = function(){
 	}while(maze.map[x][y]);
 	return {x: x, y: y};
 }
+
+exports.Maze = Maze;
+
+})(exports);
