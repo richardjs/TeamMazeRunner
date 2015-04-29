@@ -42,6 +42,11 @@ io.on('connection', function(socket){
 				clients[i].emit('runner update', player);
 			}
 		});
+		socket.on('chasers update', function(chasers){
+			for(var i = 0; i < clients.length; i++){
+				clients[i].emit('chasers update', chasers);
+			}
+		});
 	}else{
 		socket.emit('role', 'helper');
 	}

@@ -86,6 +86,13 @@ socket.on('role', function(role){
 			player.update(delta);
 			socket.emit('player update', player);
 
+			var chaserCoords = [];
+			for(var i = 0; i < chasers.length; i++){
+				chasers[i].update(delta);
+				chaserCoords.push({x: chasers[i].mesh.position.x, y: chasers[i].mesh.position.y});
+			}
+			socket.emit('chasers update', chaserCoords);
+
 			camera.position.x = player.x - maze.width/2 + .5;
 			camera.position.y = player.y - maze.height/2 + .5;
 			camera.rotation.y = player.angle;
@@ -110,6 +117,13 @@ socket.on('role', function(role){
 			scene.runner.position.x = runner.x - maze.width/2 + .5;
 			scene.runner.position.y = runner.y - maze.height/2 + .5;
 			scene.runner.rotation.z = runner.angle;
+		});
+
+		socket.on('chasers update', function(chaserCoords){
+			for(var i = 0; i < chasers.length; i++){
+				chasers[i].mesh.position.x = chaserCoords[i].x;
+				chasers[i].mesh.position.y = chaserCoords[i].y;
+			}
 		});
 
 		render = function(time){
