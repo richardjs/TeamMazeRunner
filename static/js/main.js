@@ -6,6 +6,7 @@ window.camera = null;
 window.renderer = null;
 window.maze = null;
 window.player = null;
+window.chasers = [];
 window.controller = null;
 window.render = null;
 window.socket = null;
@@ -18,7 +19,6 @@ socket.on('maze data', function(maze){
 	// Init display stuff
 	scene = new THREE.Scene();
 	camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, .1, 1000);
-	//var camera = new THREE.OrthographicCamera(window.innerWidth/-20, window.innerWidth/20, window.innerHeight/20, window.innerHeight/-20, 0, 1000);
 	renderer = new THREE.WebGLRenderer();
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	document.body.appendChild(renderer.domElement);
@@ -58,6 +58,11 @@ socket.on('maze data', function(maze){
 			}
 		}
 	}
+
+	// Add chasers
+	for(var i = 0; i < maze.chaserStarts.length; i++){
+		chasers.push(new Chaser(maze.chaserStarts[i].x, maze.chaserStarts[i].y, maze.chaserColors[i]));
+	}
 });
 
 socket.on('role', function(role){
@@ -89,6 +94,7 @@ socket.on('role', function(role){
 			requestAnimationFrame(render);
 		}
 	}else if(role === 'helper'){
+		camera = new THREE.OrthographicCamera(window.innerWidth/-20, window.innerWidth/20, window.innerHeight/20, window.innerHeight/-20, 0, 1000);
 		camera.position.z = HELPER_HEIGHT;
 		camera.lookAt(scene.floor.position);
 

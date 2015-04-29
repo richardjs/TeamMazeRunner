@@ -4,8 +4,9 @@
 
 var ROT = require('rot-js');
 
-var MAZE_WIDTH = 31;
-var MAZE_HEIGHT = 15;
+var MAZE_WIDTH = 51;
+var MAZE_HEIGHT = 31;
+var CHASERS = 3;
 
 function Maze(){
 	this.width = MAZE_WIDTH;
@@ -29,6 +30,12 @@ function Maze(){
 	}.bind(this));
 
 	this.start = this.findOpenSpace();
+	this.chaserStarts = [];
+	this.chaserColors = [];
+	for(var i = 0; i < CHASERS; i++){
+		this.chaserStarts.push(this.findOpenSpace());
+		this.chaserColors.push(Math.floor(0xffffff * Math.random()));
+	}
 }
 
 Maze.prototype.findOpenSpace = function(){
