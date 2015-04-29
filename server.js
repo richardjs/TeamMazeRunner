@@ -15,6 +15,7 @@ console.log('generating map...');
 var maze = new Maze();
 
 var clients = [];
+var runner = null;
 
 io.on('connection', function(socket){
 	console.log('connection from ' + socket.handshake.address);
@@ -23,13 +24,18 @@ io.on('connection', function(socket){
 	socket.on('disconnect', function(){
 		console.log('disconnect from ' + socket.handshake.address);
 		clients.splice(clients.indexOf(socket), 1);
-		console.log(clients.length)
+
+		if(socket === runner){
+			console.log('runner disconnected');
+			runner = null;
+		}
 	});
 
 	socket.emit('maze data', maze);
-	console.log(clients.length)
-	if(clients.length === 1){
+	if(!runner){
+		runner = socket;
 		socket.emit('role', 'runner');
+		console.log('new runner');
 
 		socket.on('player update', function(player){
 			for(var i = 0; i < clients.length; i++){
