@@ -30,6 +30,16 @@ Chaser.prototype.newPath = function(){
 	this.path = [];
 	this.pathTimer = Math.floor(Math.random() * this.drift);
 	var tx = Math.floor(player.x) + (Math.floor(Math.random() * (this.drift*2 + 1)) - this.drift);
+	if(tx < 0){
+		tx = 0;
+	}else if(tx >= maze.width){
+		tx = maze.width - 1;
+	}
+	if(ty < 0){
+		ty = 0;
+	}else if(ty >= maze.height){
+		ty = maze.height - 1;
+	}
 	var ty = Math.floor(player.y) + (Math.floor(Math.random() * (this.drift*2 + 1)) - this.drift);
 	var dijkstra = new ROT.Path.Dijkstra(tx, ty, function(x, y){
 		try{
