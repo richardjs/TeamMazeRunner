@@ -61,7 +61,7 @@ socket.on('maze data', function(maze){
 
 	// Add chasers
 	for(var i = 0; i < maze.chaserStarts.length; i++){
-		chasers.push(new Chaser(maze.chaserStarts[i].x, maze.chaserStarts[i].y, maze.chaserColors[i]));
+		chasers.push(new Chaser(maze.chaserStarts[i].x, maze.chaserStarts[i].y, maze.chaserColors[i], i));
 	}
 });
 
@@ -101,7 +101,7 @@ socket.on('role', function(role){
 			requestAnimationFrame(render);
 		}
 	}else if(role === 'helper'){
-		camera = new THREE.OrthographicCamera(window.innerWidth/-20, window.innerWidth/20, window.innerHeight/20, window.innerHeight/-20, 0, 1000);
+		camera = new THREE.OrthographicCamera(window.innerWidth/-30, window.innerWidth/30, window.innerHeight/30, window.innerHeight/-30, 0, 1000);
 		camera.position.z = HELPER_HEIGHT;
 		camera.lookAt(scene.floor.position);
 
