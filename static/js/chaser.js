@@ -1,7 +1,7 @@
 'use strict';
 
 var CHASER_SIZE = .7;
-var CHASER_MOVE_SPEED = .5;
+var CHASER_MOVE_SPEED = 3;
 
 function Chaser(x, y, color){
 	this.x = x;
@@ -25,7 +25,8 @@ function Chaser(x, y, color){
 }
 
 Chaser.prototype.newPath = function(){
-	var dijkstra = new ROT.Path.Dijkstra(player.x, player.y, function(x, y){
+	this.path = [];
+	var dijkstra = new ROT.Path.Dijkstra(Math.floor(player.x), Math.floor(player.y), function(x, y){
 		return !maze.map[x][y];
 	}, {topology: 4});
 	dijkstra.compute(this.x, this.y, function(x, y){
@@ -35,9 +36,22 @@ Chaser.prototype.newPath = function(){
 }
 
 Chaser.prototype.nextStep = function(){
+	if((Math.abs(this.x - player.x) <= 1 && this.y === player.y)
+			|| (Math.abs(this.y - player.y) <= 1 && this.x === player.x)){
+		console.log('booo!');
+		console.log(this.x + ' ' + player.x + ' ' + this.y + ' ' + player.y);
+		this.targetX = Math.floor(player.x);
+		this.targetY = Math.floor(player.y);
+		return;
+	}
+
 	var step = this.path.shift();
-	this.targetX = step.x;
-	this.targetY = step.y;
+	if(step){
+		this.targetX = step.x;
+		this.targetY = step.y;
+	}else{
+		this.newPath();
+	}
 }
 
 Chaser.prototype.update = function(delta){

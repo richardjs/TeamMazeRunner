@@ -6,7 +6,7 @@ var ROT = require('rot-js');
 
 var MAZE_WIDTH = 51;
 var MAZE_HEIGHT = 31;
-var CHASERS = 1;
+var CHASERS = 3;
 
 function Maze(){
 	this.width = MAZE_WIDTH;
