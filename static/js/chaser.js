@@ -2,6 +2,7 @@
 
 var CHASER_SIZE = .7;
 var CHASER_MOVE_SPEED = 2;
+var CHASER_COLLISION_DISTANCE = .1;
 
 function Chaser(x, y, color, drift){
 	this.x = x;
@@ -100,5 +101,12 @@ Chaser.prototype.update = function(delta){
 	}
 	this.mesh.position.x = this.x - maze.width/2 + .5;
 	this.mesh.position.y = this.y - maze.height/2 + .5;
+
+	if(Math.sqrt(Math.pow(this.x - player.x, 2) + Math.pow(this.y - player.y, 2)) < CHASER_COLLISION_DISTANCE){
+		alert('You have been caught!');
+		socket.emit('new');
+	}else{
+		console.log(Math.sqrt(Math.pow(this.x - player.x, 2) + Math.pow(this.y - player.y, 2)) < CHASER_COLLISION_DISTANCE)
+	}
 	console.log('out');
 }
