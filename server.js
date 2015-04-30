@@ -47,6 +47,24 @@ io.on('connection', function(socket){
 				clients[i].emit('chasers update', chasers);
 			}
 		});
+		socket.on('remove goal', function(goal){
+			var newLocations = [];
+			for(var i = 0; i < maze.goalLocations.length; i++){
+				if(!(maze.goalLocations[i].x === goal.x && maze.goalLocations[i].y === goal.y)){
+					newLocations.push(maze.goalLocations[i]);
+				}
+			}
+			maze.goalLocations = newLocations;
+			for(var i = 0; i < clients.length; i++){
+				clients[i].emit('remove goal', goal);
+			}
+		});
+		socket.on('new', function(){
+			maze = new Maze();
+			for(var i = 0; i < clients.length; i++){
+				clients[i].emit('reset', '');
+			}
+		});
 	}else{
 		socket.emit('role', 'helper');
 	}

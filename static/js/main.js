@@ -7,11 +7,17 @@ window.renderer = null;
 window.maze = null;
 window.player = null;
 window.chasers = [];
+window.goals = [];
 window.controller = null;
 window.render = null;
 window.socket = null;
 
 socket = io();
+
+socket.on('reset', function(){
+	console.log('resetting');
+	window.location.reload();
+});
 
 socket.on('maze data', function(maze){
 	window.maze = maze;
@@ -63,6 +69,11 @@ socket.on('maze data', function(maze){
 	for(var i = 0; i < maze.chaserStarts.length; i++){
 		chasers.push(new Chaser(maze.chaserStarts[i].x, maze.chaserStarts[i].y, maze.chaserColors[i], i));
 	}
+
+	// Add goals
+	for(var i = 0; i < maze.goalLocations.length; i++){
+		goals.push(new Goal(maze.goalLocations[i].x, maze.goalLocations[i].y));
+	}
 });
 
 socket.on('role', function(role){
@@ -92,6 +103,10 @@ socket.on('role', function(role){
 				chaserCoords.push({x: chasers[i].mesh.position.x, y: chasers[i].mesh.position.y});
 			}
 			socket.emit('chasers update', chaserCoords);
+
+			for(var i = 0; i < goals.length; i++){
+				goals[i].update(delta);
+			}
 
 			camera.position.x = player.x - maze.width/2 + .5;
 			camera.position.y = player.y - maze.height/2 + .5;
@@ -123,6 +138,14 @@ socket.on('role', function(role){
 			for(var i = 0; i < chasers.length; i++){
 				chasers[i].mesh.position.x = chaserCoords[i].x;
 				chasers[i].mesh.position.y = chaserCoords[i].y;
+			}
+		});
+
+		socket.on('remove goal', function(goal){
+			for(var i = 0; i < goals.length; i++){
+				if(goals[i].x === goal.x && goals[i].y === goal.y){
+					scene.remove(goals[i].mesh);
+				}
 			}
 		});
 
