@@ -1,7 +1,7 @@
 'use strict';
 
 var CHASER_SIZE = .7;
-var CHASER_MOVE_SPEED = 2;
+var CHASER_MOVE_SPEED = 1;
 var CHASER_COLLISION_DISTANCE = .1;
 var CHASER_WARMUP = 20*1000;
 
