@@ -18,7 +18,7 @@ function Maze(){
 		if(!wall){
 			return;
 		}
-		if(Math.random() < .2 && x !== 0 && y !== 0 && x !== MAZE_WIDTH - 1 && y !== MAZE_HEIGHT - 1){
+		if(Math.random() < .3 && x !== 0 && y !== 0 && x !== MAZE_WIDTH - 1 && y !== MAZE_HEIGHT - 1){
 			return;
 		}
 
