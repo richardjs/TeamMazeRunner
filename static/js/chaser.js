@@ -79,7 +79,6 @@ Chaser.prototype.update = function(delta){
 		this.warmup -= delta;
 		return;
 	}
-	console.log('in');
 	var moveDistance = CHASER_MOVE_SPEED * delta / 1000;
 	if(this.path.length === 0){
 		this.newPath();
@@ -116,5 +115,4 @@ Chaser.prototype.update = function(delta){
 	}else{
 		console.log(Math.sqrt(Math.pow(this.x - player.x, 2) + Math.pow(this.y - player.y, 2)) < CHASER_COLLISION_DISTANCE)
 	}
-	console.log('out');
 }
