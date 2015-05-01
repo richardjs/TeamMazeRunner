@@ -3,6 +3,7 @@
 var CHASER_SIZE = .7;
 var CHASER_MOVE_SPEED = 2;
 var CHASER_COLLISION_DISTANCE = .1;
+var CHASER_WARMUP = 20*1000;
 
 function Chaser(x, y, color, drift){
 	this.x = x;
@@ -25,6 +26,8 @@ function Chaser(x, y, color, drift){
 	this.path = [];
 	this.pathTimer = 0;
 	this.drift = Math.pow(drift, 2);
+
+	this.warmup = CHASER_WARMUP;
 }
 
 Chaser.prototype.newPath = function(){
@@ -72,6 +75,10 @@ Chaser.prototype.nextStep = function(){
 }
 
 Chaser.prototype.update = function(delta){
+	if(this.warmup >= 0){
+		this.warmup -= delta;
+		return;
+	}
 	console.log('in');
 	var moveDistance = CHASER_MOVE_SPEED * delta / 1000;
 	if(this.path.length === 0){
