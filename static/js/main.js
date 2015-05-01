@@ -94,6 +94,10 @@ socket.on('role', function(role){
 			var delta = time - lastTime;
 			lastTime = time;
 
+			if(player.caught){
+				return;
+			}
+
 			player.update(delta);
 			socket.emit('player update', player);
 
