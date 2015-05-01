@@ -30,7 +30,7 @@ socket.on('maze data', function(maze){
 	document.body.appendChild(renderer.domElement);
 
 	// Add lighting
-	var ambientLight = new THREE.AmbientLight(0x222222);
+	var ambientLight = new THREE.AmbientLight(0x333333);
 	scene.add(ambientLight);
 	var pointLight = new THREE.PointLight(0xaaaaaa);
 	pointLight.position.set(0, 0, 10);
@@ -39,8 +39,8 @@ socket.on('maze data', function(maze){
 	// Create floor
 	scene.floor = new THREE.Mesh(
 		new THREE.PlaneGeometry(maze.width, maze.height),
-		new THREE.MeshPhongMaterial({
-			color: 0xfffffff,
+		new THREE.MeshLambertMaterial({
+			color: 0xdddddd,
 		})
 	);
 	scene.add(scene.floor);
@@ -51,8 +51,8 @@ socket.on('maze data', function(maze){
 			if(maze.map[x][y]){
 				var box = new THREE.Mesh(
 					new THREE.BoxGeometry(1, 1, 1),
-					new THREE.MeshPhongMaterial({
-						color: 0xff0000,
+					new THREE.MeshLambertMaterial({
+						color: 0x5577aa
 					})
 				);
 
